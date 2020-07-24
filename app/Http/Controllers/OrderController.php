@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Order;
+use App\OrderItem;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -102,10 +103,16 @@ class OrderController extends Controller
             'data.attributes.status' => 'required'
         ]);
         
-        $data = new Order();
-        $data->user_id = $request->input('data.attributes.user_id');
-        $data->status = $request->input('data.attributes.status');
-        $data->save();
+        $order = new Order();
+        $order->user_id = $request->input('data.attributes.user_id');
+        $order->status = $request->input('data.attributes.status');
+        $order->save();
+
+        $order_item = new OrderItem();
+        $order_item->order_id = $order->id;
+        $order_item->product_id = $request->input('data.attributes.order_detail.product_id');
+        $order_item->quantity = $request->input('data.attributes.order_detail.quantity');
+        $order->orderitem()->save($order_item);
 
         Log::info('Adding order');
 
