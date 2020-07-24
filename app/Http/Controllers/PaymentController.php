@@ -210,9 +210,9 @@ class PaymentController extends Controller
         // return $transaction;
         try {
             $snapToken = Snap::getSnapToken($transaction);
-            return response()->json($snapToken);
+            // return response()->json($snapToken);
             return response()->json([
-                "message" => "Success Added",
+                "message" => "Transaction added successfully",
                 "status" => true,
                 "results" => $snapToken,
                 // "data" => [
@@ -221,40 +221,144 @@ class PaymentController extends Controller
             ]);
         } catch (\Exception $e) {
             dd($e);
-            return ['code' => 0 , 'message' => 'failed'];
+            // return ['code' => 0 , 'message' => 'failed'];
+            return response()->json([
+                "message" => "failed",
+                "status" => false,
+                // "results" => $snapToken,
+                // "data" => [
+                //     "attributes" => $data
+                // ]
+            ]);
         }
 
     }
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'data.attributes.payment_type' => 'required',
-            'data.attributes.gross_amount' => 'required',
-            'data.attributes.bank' => 'required',
-            'data.attributes.order_id' => 'required|exists:orders,id'
-        ]);
+        // $this->validate($request, [
+        //     'data.attributes.payment_type' => 'required',
+        //     'data.attributes.gross_amount' => 'required',
+        //     'data.attributes.bank' => 'required',
+        //     'data.attributes.order_id' => 'required|exists:orders,id'
+        // ]);
         
-        $data = Payment::find($id);
-        if ($data) {
-            $data->payment_type = $request->input('data.attributes.payment_type');
-            $data->gross_amount = $request->input('data.attributes.gross_amount');
-            $data->bank = $request->input('data.attributes.bank');
-            $data->order_id = $request->input('data.attributes.order_id');
-            $data->save();
+        // $data = Payment::find($id);
+        // if ($data) {
+        //     $data->payment_type = $request->input('data.attributes.payment_type');
+        //     $data->gross_amount = $request->input('data.attributes.gross_amount');
+        //     $data->bank = $request->input('data.attributes.bank');
+        //     $data->order_id = $request->input('data.attributes.order_id');
+        //     $data->save();
 
-            Log::info('Updating payment by id');
+        //     Log::info('Updating payment by id');
 
+        //     return response()->json([
+        //         "message" => "Success Updated",
+        //         "status" => true,
+        //         "data" => [
+        //             "attributes" => $data
+        //         ]
+        //     ]);        
+        // }else {
+        //     return response()->json([
+        //         "message" => "Parameter Not Found"
+        //     ]);
+        // }
+
+        $item_list = array();
+        $amount = 0;
+        Config::$serverKey = 'SB-Mid-server-VbqKS4xIPoo0ZR3Qu3xKt8Jj';
+        if (!isset(Config::$serverKey)) {
+            return "Please set your payment server key";
+        }
+        Config::$isSanitized = true;
+
+        // Enable 3D-Secure
+        Config::$is3ds = true;
+        
+        // Required
+
+        $item_list[] = [
+                'id' => "111",
+                'price' => 20000,
+                'quantity' => 1,
+                'name' => "Majohn"
+        ];
+
+        $transaction_details = array(
+            'order_id' => rand(),
+            'gross_amount' => 20000, // no decimal allowed for creditcard
+        );
+
+
+        // Optional
+        $item_details = $item_list;
+
+        // Optional
+        $billing_address = array(
+            'first_name'    => "Andri",
+            'last_name'     => "Litani",
+            'address'       => "Mangga 20",
+            'city'          => "Jakarta",
+            'postal_code'   => "16602",
+            'phone'         => "081122334455",
+            'country_code'  => 'IDN'
+        );
+
+        // Optional
+        $shipping_address = array(
+            'first_name'    => "Obet",
+            'last_name'     => "Supriadi",
+            'address'       => "Manggis 90",
+            'city'          => "Jakarta",
+            'postal_code'   => "16601",
+            'phone'         => "08113366345",
+            'country_code'  => 'IDN'
+        );
+
+        // Optional
+        $customer_details = array(
+            'first_name'    => "Andri",
+            'last_name'     => "Litani",
+            'email'         => "andri@litani.com",
+            'phone'         => "081122334455",
+            'billing_address'  => $billing_address,
+            'shipping_address' => $shipping_address
+        );
+
+        // Optional, remove this to display all available payment methods
+        $enable_payments = array('bank_transfer');
+
+        // Fill transaction details
+        $transaction = array(
+            'enabled_payments' => $enable_payments,
+            'transaction_details' => $transaction_details,
+            'customer_details' => $customer_details,
+            'item_details' => $item_details,
+        );
+        // return $transaction;
+        try {
+            $snapToken = Snap::getSnapToken($transaction);
+            // return response()->json($snapToken);
             return response()->json([
-                "message" => "Success Updated",
+                "message" => "Transaction updated successfully",
                 "status" => true,
-                "data" => [
-                    "attributes" => $data
-                ]
-            ]);        
-        }else {
+                "results" => $snapToken,
+                // "data" => [
+                //     "attributes" => $data
+                // ]
+            ]);
+        } catch (\Exception $e) {
+            dd($e);
+            // return ['code' => 0 , 'message' => 'failed'];
             return response()->json([
-                "message" => "Parameter Not Found"
+                "message" => "failed",
+                "status" => false,
+                // "results" => $snapToken,
+                // "data" => [
+                //     "attributes" => $data
+                // ]
             ]);
         }
 
@@ -269,7 +373,7 @@ class PaymentController extends Controller
             Log::info('Deleting payment by id');
 
             return response()->json([
-                "message" => "Success Deleted",
+                "message" => "Transaction deleted successfully",
                 "status" => true,
                 "data" => [
                     "attributes" => $data
