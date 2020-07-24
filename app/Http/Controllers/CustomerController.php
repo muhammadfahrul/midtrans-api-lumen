@@ -27,10 +27,12 @@ class CustomerController extends Controller
             ]);
         }
 
-        Log::info('Showing all author');
+        Log::info('Showing all customer');
 
         return response()->json([
-            "results" => $data
+            "message" => "Success retrieve data",
+            "status" => true,
+            "data" => $data
         ]);
     }
 
@@ -43,10 +45,12 @@ class CustomerController extends Controller
             ]);
         }
 
-        Log::info('Showing author by id');
+        Log::info('Showing customer by id');
 
         return response()->json([
-            "results" => $data
+            "message" => "Success retrieve data",
+            "status" => true,
+            "data" => $data
         ]);
     }
 
@@ -66,11 +70,12 @@ class CustomerController extends Controller
         $data->phone_number = $request->input('phone_number');
         $data->save();
 
-        Log::info('Adding author');
+        Log::info('Adding customer');
 
         return response()->json([
             "message" => "Success Added",
-            "results" => $data
+            "status" => true,
+            "data"['attributes'] => $data
         ]);
     }
 
@@ -91,11 +96,12 @@ class CustomerController extends Controller
             $data->phone_number = $request->input('phone_number');
             $data->save();
 
-            Log::info('Updating author by id');
+            Log::info('Updating customer by id');
 
             return response()->json([
                 "message" => "Success Updated",
-                "results" => $data
+                "status" => true,
+                "data"['attributes'] => $data
             ]);        
         }else {
             return response()->json([
@@ -111,11 +117,12 @@ class CustomerController extends Controller
         if($data) {
             $data->delete();
 
-            Log::info('Deleting author by id');
+            Log::info('Deleting customer by id');
 
             return response()->json([
                 "message" => "Success Deleted",
-                "results" => $data
+                "status" => true,
+                "data"['attributes'] => $data
             ]);   
         }else {
             return response()->json([
