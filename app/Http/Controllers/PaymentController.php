@@ -6,6 +6,21 @@ use App\Payment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
+use App\Http\Controllers\Midtrans\Config;
+
+// Midtrans API Resources
+use App\Http\Controllers\Midtrans\Transaction;
+
+// Plumbing
+use App\Http\Controllers\Midtrans\ApiRequestor;
+use App\Http\Controllers\Midtrans\SnapApiRequestor;
+use App\Http\Controllers\Midtrans\Notification;
+use App\Http\Controllers\Midtrans\CoreApi;
+use App\Http\Controllers\Midtrans\Snap;
+
+// Sanitization
+use App\Http\Controllers\Midtrans\Sanitizer;
+
 class PaymentController extends Controller
 {
     /**
