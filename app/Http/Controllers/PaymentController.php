@@ -321,7 +321,7 @@ class PaymentController extends Controller
         $customer_details = array(
             'first_name'    => "Budi",
             'last_name'     => "Badi",
-            'email'         => "buba@litani.com",
+            'email'         => "buba@gmail.com",
             'phone'         => "081245162718",
             'billing_address'  => $billing_address,
             'shipping_address' => $shipping_address
