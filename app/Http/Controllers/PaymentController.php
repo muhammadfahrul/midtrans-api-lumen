@@ -130,15 +130,11 @@ class PaymentController extends Controller
         $payment->order_id = $request->input('data.attributes.order_id');
         $payment->save();
 
-        $orderitem = OrderItem::with(array('product'=>function($query){
-            $query->select();
-        }))->get();
-
         $item_list[] = [
-            'id' => $orderitem['data']['product']['id'],
-            'price' => $orderitem['data']['product']['price'],
-            'quantity' => $orderitem['data']['quantity'],
-            'name' => $orderitem['data']['product']['name']
+            'id' => "2",
+            'price' => 10000,
+            'quantity' => 2,
+            'name' => "Apple"
         ];
 
         $item_details = $item_list;
@@ -153,12 +149,44 @@ class PaymentController extends Controller
 
         Config::$isSanitized = true;
         Config::$is3ds = true;
+
+        $billing_address = array(
+            'first_name'    => "Andri",
+            'last_name'     => "Litani",
+            'address'       => "Mangga 20",
+            'city'          => "Jakarta",
+            'postal_code'   => "16602",
+            'phone'         => "081122334455",
+            'country_code'  => 'IDN'
+        );
+
+        // Optional
+        $shipping_address = array(
+            'first_name'    => "Obet",
+            'last_name'     => "Supriadi",
+            'address'       => "Manggis 90",
+            'city'          => "Jakarta",
+            'postal_code'   => "16601",
+            'phone'         => "08113366345",
+            'country_code'  => 'IDN'
+        );
+
+        // Optional
+        $customer_details = array(
+            'first_name'    => "Andri",
+            'last_name'     => "Litani",
+            'email'         => "andri@litani.com",
+            'phone'         => "081122334455",
+            'billing_address'  => $billing_address,
+            'shipping_address' => $shipping_address
+        );
         
-        $enable_payments = array('bank_transfer');
+        // $enable_payments = array('bank_transfer');
 
         $transaction = array(
-            'enabled_payments' => $payment->payment_type,
+            'enabled_payments' => $payment->bank,
             'transaction_details' => $payment,
+            'customer_details' => $customer_details,
             'item_details' => $item_details,
         );
 

@@ -44,7 +44,7 @@ class MidtransController extends Controller
         
         // Required
 
-         $item_list[] = [
+        $item_list[] = [
                 'id' => "111",
                 'price' => 20000,
                 'quantity' => 1,
