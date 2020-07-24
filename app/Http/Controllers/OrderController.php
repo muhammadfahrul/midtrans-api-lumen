@@ -120,7 +120,7 @@ class OrderController extends Controller
             "message" => "Success Added",
             "status" => true,
             "data" => [
-                "attributes" => $data
+                "attributes" => $order
             ]
         ]);
     }
