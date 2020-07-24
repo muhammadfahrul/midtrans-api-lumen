@@ -118,14 +118,17 @@ class PaymentController extends Controller
             'data.attributes.order_id' => 'required|exists:orders,id'
         ]);
         
-        // $data = new Payment();
-        // $data->payment_type = $request->input('data.attributes.payment_type');
-        // $data->gross_amount = $request->input('data.attributes.gross_amount');
+        $data = new Payment();
+        $data->payment_type = $request->input('data.attributes.payment_type');
+        $data->gross_amount = $request->input('data.attributes.gross_amount');
         // $data->bank = $request->input('data.attributes.bank');
-        // $data->order_id = $request->input('data.attributes.order_id');
-        // $data->save();
+        $data->order_id = $request->input('data.attributes.order_id');
+        $data->transaction_id = "";
+        $data->transaction_time = "";
+        $data->transaction_status = "";
+        $data->save();
 
-        // Log::info('Adding payment');
+        Log::info('Adding payment');
 
         // return response()->json([
         //     "message" => "Success Added",
@@ -156,8 +159,8 @@ class PaymentController extends Controller
         ];
 
         $transaction_details = array(
-            'order_id' => rand(),
-            'gross_amount' => 20000, // no decimal allowed for creditcard
+            'order_id' => $data->order_id,
+            'gross_amount' => $data->gross_amount, // no decimal allowed for creditcard
         );
 
 
@@ -197,11 +200,11 @@ class PaymentController extends Controller
         );
 
         // Optional, remove this to display all available payment methods
-        $enable_payments = array('bank_transfer');
+        // $enable_payments = array('bank_transfer');
 
         // Fill transaction details
         $transaction = array(
-            'enabled_payments' => $enable_payments,
+            'enabled_payments' => $data->payment_type,
             'transaction_details' => $transaction_details,
             'customer_details' => $customer_details,
             'item_details' => $item_details,
@@ -210,24 +213,14 @@ class PaymentController extends Controller
         try {
             $snapToken = Snap::getSnapToken($transaction);
 
-            $data = new Payment();
-            $data->payment_type = $request->input('data.attributes.payment_type');
-            $data->gross_amount = $request->input('data.attributes.gross_amount');
-            // $data->bank = $request->input('data.attributes.bank');
-            $data->order_id = $request->input('data.attributes.order_id');
-            $data->transaction_id = $transaction_details['order_id'];
-            $data->transaction_time = "";
-            $data->transaction_status = "";
-            $data->save();
-
             // return response()->json($snapToken);
             return response()->json([
                 "message" => "Transaction added successfully",
                 "status" => true,
                 "results" => $snapToken,
-                // "data" => [
-                //     "attributes" => $data
-                // ]
+                "data" => [
+                    "attributes" => $data
+                ]
             ]);
         } catch (\Exception $e) {
             dd($e);
