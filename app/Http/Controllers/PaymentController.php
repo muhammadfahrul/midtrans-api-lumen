@@ -139,7 +139,7 @@ class PaymentController extends Controller
         //         "attributes" => $data
         //     ]
         // ]);
-        Config::$serverKey = 'SB-Mid-server-jMa1yoEHLCbuNPkScwv9LKwI';
+        Config::$serverKey = 'SB-Mid-server-VbqKS4xIPoo0ZR3Qu3xKt8Jj';
         if(!isset(Config::$serverKey))
         {
             return "Please set your payment server key";
@@ -166,18 +166,11 @@ class PaymentController extends Controller
             'email'         => "andri@litani.com",
             'phone'         => "081122334455",
         );
-        // {
-        //     "data": {
-        //       "attributes": {
-        //       "payment_type": "bank_transfer",
-        //       "gross_amount": 20000,
-        //       "bank": "bni",
-        //       "order_id": 1
-        //       }
-        //     }
-        //   }
+        
+        $enable_payments = array('bni', 'bca');
+
         $transaction = array(
-            // 'enabled_payments' => $enable_payments,
+            'enabled_payments' => $enable_payments,
             'transaction_details' => $transaction_details,
             'customer_details' => $customer_details,
             'item_details' => $item_list,
