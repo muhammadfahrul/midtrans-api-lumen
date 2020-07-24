@@ -98,7 +98,7 @@ class OrderController extends Controller
     public function add(Request $request)
     {
         $this->validate($request, [
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:customers,id',
             'status' => 'required'
         ]);
         
@@ -121,7 +121,7 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'user_id' => 'required|exists:users,id',
+            'user_id' => 'required|exists:customers,id',
             'status' => 'required'
         ]);
         
