@@ -150,10 +150,10 @@ class PaymentController extends Controller
         // Required
 
         $item_list[] = [
-                'id' => "111",
+                'id' => "151",
                 'price' => 20000,
-                'quantity' => 1,
-                'name' => "Majohn"
+                'quantity' => 4,
+                'name' => "Apple"
         ];
 
         $transaction_details = array(
@@ -280,15 +280,15 @@ class PaymentController extends Controller
         // Required
 
         $item_list[] = [
-                'id' => "111",
-                'price' => 20000,
-                'quantity' => 1,
-                'name' => "Majohn"
+                'id' => "124",
+                'price' => 12000,
+                'quantity' => 5,
+                'name' => "Mango"
         ];
 
         $transaction_details = array(
             'order_id' => rand(),
-            'gross_amount' => 20000, // no decimal allowed for creditcard
+            'gross_amount' => 12000, // no decimal allowed for creditcard
         );
 
 
@@ -297,32 +297,32 @@ class PaymentController extends Controller
 
         // Optional
         $billing_address = array(
-            'first_name'    => "Andri",
-            'last_name'     => "Litani",
-            'address'       => "Mangga 20",
+            'first_name'    => "Hujani",
+            'last_name'     => "Yunani",
+            'address'       => "Hukal 20",
             'city'          => "Jakarta",
-            'postal_code'   => "16602",
-            'phone'         => "081122334455",
+            'postal_code'   => "51268",
+            'phone'         => "083256472910",
             'country_code'  => 'IDN'
         );
 
         // Optional
         $shipping_address = array(
-            'first_name'    => "Obet",
-            'last_name'     => "Supriadi",
-            'address'       => "Manggis 90",
+            'first_name'    => "Tukaki",
+            'last_name'     => "Rekosil",
+            'address'       => "Gujahi 90",
             'city'          => "Jakarta",
-            'postal_code'   => "16601",
-            'phone'         => "08113366345",
+            'postal_code'   => "24115",
+            'phone'         => "085152726491",
             'country_code'  => 'IDN'
         );
 
         // Optional
         $customer_details = array(
-            'first_name'    => "Andri",
-            'last_name'     => "Litani",
-            'email'         => "andri@litani.com",
-            'phone'         => "081122334455",
+            'first_name'    => "Budi",
+            'last_name'     => "Badi",
+            'email'         => "buba@litani.com",
+            'phone'         => "081245162718",
             'billing_address'  => $billing_address,
             'shipping_address' => $shipping_address
         );
