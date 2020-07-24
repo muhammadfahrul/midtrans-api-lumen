@@ -37,14 +37,6 @@ class Sanitizer extends Controller
             $item['id'] = $id
                 ->maxLength(50)
                 ->apply($item['id']);
-            $price = new self;
-            $item['price'] = $price
-                ->maxLength(50)
-                ->apply($item['price']);
-            $quantity = new self;
-            $item['quantity'] = $quantity
-                ->maxLength(50)
-                ->apply($item['quantity']);
             $name = new self;
             $item['name'] = $name
                 ->maxLength(50)
