@@ -72,10 +72,12 @@ class CustomerController extends Controller
 
         Log::info('Adding customer');
 
+        $results = ['data'];
+
         return response()->json([
             "message" => "Success Added",
             "status" => true,
-            "data"['attributes'] => $data
+            $results['attributes'] => $data
         ]);
     }
 
@@ -98,10 +100,12 @@ class CustomerController extends Controller
 
             Log::info('Updating customer by id');
 
+            $results = ['data'];
+
             return response()->json([
                 "message" => "Success Updated",
                 "status" => true,
-                "data"['attributes'] => $data
+                $results['attributes'] => $data
             ]);        
         }else {
             return response()->json([
@@ -119,10 +123,12 @@ class CustomerController extends Controller
 
             Log::info('Deleting customer by id');
 
+            $results = ['data'];
+
             return response()->json([
                 "message" => "Success Deleted",
                 "status" => true,
-                "data"['attributes'] => $data
+                $results['attributes'] => $data
             ]);   
         }else {
             return response()->json([
