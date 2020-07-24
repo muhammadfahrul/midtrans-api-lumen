@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class OrderItem extends Model
 {
     protected $table = 'order_items';
-    public $keyType = 'string';
+    // public $keyType = 'string';
 
     public function order(){
         return $this->belongsTo('App\Order');
