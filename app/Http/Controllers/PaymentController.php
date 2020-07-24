@@ -128,81 +128,31 @@ class PaymentController extends Controller
 
         Log::info('Adding payment');
 
-        Config::$serverKey = 'SB-Mid-server-VbqKS4xIPoo0ZR3Qu3xKt8Jj';
-        if(!isset(Config::$serverKey))
-        {
-            return "Please set your payment server key";
-        }
-
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
-
-        $item_list[] = [
-            'id' => "111",
-            'price' => 20000,
-            'quantity' => 4,
-            'name' => "Majohn"
-        ];
-
-        $transaction_details = array(
-            'order_id' => rand(),
-            'gross_amount' => 20000, // no decimal allowed for creditcard
-        );
-
-        $customer_details = array(
-            'first_name'    => "Andri",
-            'last_name'     => "Litani",
-            'email'         => "andri@litani.com",
-            'phone'         => "081122334455",
-        );
-        
-        $enable_payments = array('bank_transfer');
-
-        $transaction = array(
-            'enabled_payments' => $enable_payments,
-            'transaction_details' => $data,
-            'customer_details' => $customer_details,
-            'item_details' => $item_list,
-        );
-
-        try {
-            $snapToken = Snap::createTransaction($transaction);
-            return response()->json(['code' => 1 , 'message' => 'success' , 'result' => $snapToken]);
-            // return ['code' => 1 , 'message' => 'success' , 'result' => $snapToken];
-        } catch (\Exception $e) {
-            dd($e);
-            return ['code' => 0 , 'message' => 'failed'];
-        }
-
-        // return response()->json([
-        //     "message" => "Success Added",
-        //     "status" => true,
-        //     "data" => [
-        //         "attributes" => $data
-        //     ]
-        // ]);
+        return response()->json([
+            "message" => "Success Added",
+            "status" => true,
+            "data" => [
+                "attributes" => $data
+            ]
+        ]);
 
     }
 
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'data.attributes.order_id' => 'required|exists:orders,id',
-            'data.attributes.transaction_id' => 'required',
             'data.attributes.payment_type' => 'required',
             'data.attributes.gross_amount' => 'required',
-            'data.attributes.transaction_time' => 'required',
-            'data.attributes.transaction_status' => 'required'
+            'data.attributes.bank' => 'required',
+            'data.attributes.order_id' => 'required|exists:orders,id'
         ]);
         
         $data = Payment::find($id);
         if ($data) {
-            $data->order_id = $request->input('data.attributes.order_id');
-            $data->transaction_id = $request->input('data.attributes.transaction_id');
             $data->payment_type = $request->input('data.attributes.payment_type');
             $data->gross_amount = $request->input('data.attributes.gross_amount');
-            $data->transaction_time = $request->input('data.attributes.transaction_time');
-            $data->transaction_status = $request->input('data.attributes.transaction_status');
+            $data->bank = $request->input('data.attributes.bank');
+            $data->order_id = $request->input('data.attributes.order_id');
             $data->save();
 
             Log::info('Updating payment by id');
