@@ -134,7 +134,12 @@ class PaymentController extends Controller
             $query->select();
         }))->get();
 
-        $item_list[] = $orderitem;
+        $item_list[] = [
+            'id' => $orderitem['data']['product']['id'],
+            'price' => $orderitem['data']['product']['price'],
+            'quantity' => $orderitem['data']['quantity'],
+            'name' => $orderitem['data']['product']['name']
+        ];
 
         $item_details = $item_list;
 
