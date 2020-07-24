@@ -30,7 +30,9 @@ class PaymentController extends Controller
         Log::info('Showing all author');
 
         return response()->json([
-            "results" => $data
+            "message" => "Success retrieve data",
+            "status" => true,
+            "data" => $data
         ]);
     }
 
@@ -48,7 +50,9 @@ class PaymentController extends Controller
         Log::info('Showing all author');
 
         return response()->json([
-            "results" => $data
+            "message" => "Success retrieve data",
+            "status" => true,
+            "data" => $data
         ]);
     }
 
@@ -64,7 +68,9 @@ class PaymentController extends Controller
         Log::info('Showing author by id');
 
         return response()->json([
-            "results" => $data
+            "message" => "Success retrieve data",
+            "status" => true,
+            "data" => $data
         ]);
     }
 
@@ -83,7 +89,9 @@ class PaymentController extends Controller
         Log::info('Showing author with post comment by id');
 
         return response()->json([
-            "results" => $data
+            "message" => "Success retrieve data",
+            "status" => true,
+            "data" => $data
         ]);
     }
 
@@ -111,7 +119,10 @@ class PaymentController extends Controller
 
         return response()->json([
             "message" => "Success Added",
-            "results" => $data
+            "status" => true,
+            "data" => [
+                "attributes" => $data
+            ]
         ]);
     }
 
@@ -140,7 +151,10 @@ class PaymentController extends Controller
 
             return response()->json([
                 "message" => "Success Updated",
-                "results" => $data
+                "status" => true,
+                "data" => [
+                    "attributes" => $data
+                ]
             ]);        
         }else {
             return response()->json([
@@ -160,7 +174,10 @@ class PaymentController extends Controller
 
             return response()->json([
                 "message" => "Success Deleted",
-                "results" => $data
+                "status" => true,
+                "data" => [
+                    "attributes" => $data
+                ]
             ]);   
         }else {
             return response()->json([

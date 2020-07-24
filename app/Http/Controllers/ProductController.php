@@ -30,7 +30,9 @@ class ProductController extends Controller
         Log::info('Showing all author');
 
         return response()->json([
-            "results" => $data
+            "message" => "Success retrieve data",
+            "status" => true,
+            "data" => $data
         ]);
     }
 
@@ -46,7 +48,9 @@ class ProductController extends Controller
         Log::info('Showing author by id');
 
         return response()->json([
-            "results" => $data
+            "message" => "Success retrieve data",
+            "status" => true,
+            "data" => $data
         ]);
     }
 
@@ -66,7 +70,10 @@ class ProductController extends Controller
 
         return response()->json([
             "message" => "Success Added",
-            "results" => $data
+            "status" => true,
+            "data" => [
+                "attributes" => $data
+            ]
         ]);
     }
 
@@ -87,7 +94,10 @@ class ProductController extends Controller
 
             return response()->json([
                 "message" => "Success Updated",
-                "results" => $data
+                "status" => true,
+                "data" => [
+                    "attributes" => $data
+                ]
             ]);        
         }else {
             return response()->json([
@@ -107,7 +117,10 @@ class ProductController extends Controller
 
             return response()->json([
                 "message" => "Success Deleted",
-                "results" => $data
+                "status" => true,
+                "data" => [
+                    "attributes" => $data
+                ]
             ]);   
         }else {
             return response()->json([
