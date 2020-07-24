@@ -3,10 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Payment;
-use App\Customer;
-use App\Order;
-use App\OrderItem;
-use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -55,25 +51,25 @@ class PaymentController extends Controller
         ]);
     }
 
-    // public function showAllJoin()
-    // {
-    //     $data = Payment::with(array('order'=>function($query){
-    //         $query->select();
-    //     }))->get();
-    //     if(!$data) {
-    //         return response()->json([
-    //             "message" => "Data Not Found"
-    //         ]);
-    //     }
+    public function showAllJoin()
+    {
+        $data = Payment::with(array('order'=>function($query){
+            $query->select();
+        }))->get();
+        if(!$data) {
+            return response()->json([
+                "message" => "Data Not Found"
+            ]);
+        }
 
-    //     Log::info('Showing all payment');
+        Log::info('Showing all payment');
 
-    //     return response()->json([
-    //         "message" => "Success retrieve data",
-    //         "status" => true,
-    //         "data" => $data
-    //     ]);
-    // }
+        return response()->json([
+            "message" => "Success retrieve data",
+            "status" => true,
+            "data" => $data
+        ]);
+    }
 
     public function showId($id)
     {
@@ -93,26 +89,26 @@ class PaymentController extends Controller
         ]);
     }
 
-    // public function showIdJoin($id)
-    // {
-    //     $findId = Payment::find($id);
-    //     $data = Payment::where('id', $id)->with(array('order'=>function($query){
-    //         $query->select();
-    //     }))->get();
-    //     if(!$findId) {
-    //         return response()->json([
-    //             "message" => "Parameter Not Found"
-    //         ]);
-    //     }
+    public function showIdJoin($id)
+    {
+        $findId = Payment::find($id);
+        $data = Payment::where('id', $id)->with(array('order'=>function($query){
+            $query->select();
+        }))->get();
+        if(!$findId) {
+            return response()->json([
+                "message" => "Parameter Not Found"
+            ]);
+        }
 
-    //     Log::info('Showing payment with post comment by id');
+        Log::info('Showing payment with post comment by id');
 
-    //     return response()->json([
-    //         "message" => "Success retrieve data",
-    //         "status" => true,
-    //         "data" => $data
-    //     ]);
-    // }
+        return response()->json([
+            "message" => "Success retrieve data",
+            "status" => true,
+            "data" => $data
+        ]);
+    }
 
     public function add(Request $request)
     {
@@ -123,21 +119,12 @@ class PaymentController extends Controller
             'data.attributes.order_id' => 'required|exists:orders,id'
         ]);
         
-        $payment = new Payment();
-        $payment->payment_type = $request->input('data.attributes.payment_type');
-        $payment->gross_amount = $request->input('data.attributes.gross_amount');
-        $payment->bank = $request->input('data.attributes.bank');
-        $payment->order_id = $request->input('data.attributes.order_id');
-        $payment->save();
-
-        $item_list[] = [
-            'id' => "2",
-            'price' => 10000,
-            'quantity' => 2,
-            'name' => "Apple"
-        ];
-
-        $item_details = $item_list;
+        $data = new Payment();
+        $data->payment_type = $request->input('data.attributes.payment_type');
+        $data->gross_amount = $request->input('data.attributes.gross_amount');
+        $data->bank = $request->input('data.attributes.bank');
+        $data->order_id = $request->input('data.attributes.order_id');
+        $data->save();
 
         Log::info('Adding payment');
 
@@ -150,55 +137,38 @@ class PaymentController extends Controller
         Config::$isSanitized = true;
         Config::$is3ds = true;
 
-        $billing_address = array(
-            'first_name'    => "Andri",
-            'last_name'     => "Litani",
-            'address'       => "Mangga 20",
-            'city'          => "Jakarta",
-            'postal_code'   => "16602",
-            'phone'         => "081122334455",
-            'country_code'  => 'IDN'
+        $item_list[] = [
+            'id' => "111",
+            'price' => 20000,
+            'quantity' => 4,
+            'name' => "Majohn"
+        ];
+
+        $transaction_details = array(
+            'order_id' => rand(),
+            'gross_amount' => 20000, // no decimal allowed for creditcard
         );
 
-        // Optional
-        $shipping_address = array(
-            'first_name'    => "Obet",
-            'last_name'     => "Supriadi",
-            'address'       => "Manggis 90",
-            'city'          => "Jakarta",
-            'postal_code'   => "16601",
-            'phone'         => "08113366345",
-            'country_code'  => 'IDN'
-        );
-
-        // Optional
         $customer_details = array(
             'first_name'    => "Andri",
             'last_name'     => "Litani",
             'email'         => "andri@litani.com",
             'phone'         => "081122334455",
-            'billing_address'  => $billing_address,
-            'shipping_address' => $shipping_address
         );
         
         $enable_payments = array('bank_transfer');
 
         $transaction = array(
             'enabled_payments' => $enable_payments,
-            'transaction_details' => $payment,
+            'transaction_details' => $data,
             'customer_details' => $customer_details,
-            'item_details' => $item_details,
+            'item_details' => $item_list,
         );
 
         try {
             $snapToken = Snap::createTransaction($transaction);
-
-            return response()->json([
-                'message' => 'Transaction successfully',
-                'status' => true,
-                'results' => $snapToken,
-                'data' => $payment
-            ]);
+            return response()->json(['code' => 1 , 'message' => 'success' , 'result' => $snapToken]);
+            // return ['code' => 1 , 'message' => 'success' , 'result' => $snapToken];
         } catch (\Exception $e) {
             dd($e);
             return ['code' => 0 , 'message' => 'failed'];
@@ -211,6 +181,7 @@ class PaymentController extends Controller
         //         "attributes" => $data
         //     ]
         // ]);
+
     }
 
     public function update(Request $request, $id)
