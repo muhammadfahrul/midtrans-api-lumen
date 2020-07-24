@@ -34,6 +34,24 @@ class PaymentController extends Controller
         ]);
     }
 
+    public function showAllJoin()
+    {
+        $data = Payment::with(array('order'=>function($query){
+            $query->select();
+        }))->get();
+        if(!$data) {
+            return response()->json([
+                "message" => "Data Not Found"
+            ]);
+        }
+
+        Log::info('Showing all author');
+
+        return response()->json([
+            "results" => $data
+        ]);
+    }
+
     public function showId($id)
     {
         $data = Payment::find($id);
@@ -44,6 +62,25 @@ class PaymentController extends Controller
         }
 
         Log::info('Showing author by id');
+
+        return response()->json([
+            "results" => $data
+        ]);
+    }
+
+    public function showIdJoin($id)
+    {
+        $findId = Payment::find($id);
+        $data = Payment::where('id', $id)->with(array('order'=>function($query){
+            $query->select();
+        }))->get();
+        if(!$findId) {
+            return response()->json([
+                "message" => "Parameter Not Found"
+            ]);
+        }
+
+        Log::info('Showing author with post comment by id');
 
         return response()->json([
             "results" => $data
@@ -130,5 +167,10 @@ class PaymentController extends Controller
                 "message" => "Parameter Not Found"
             ]);
         }
+    }
+
+    public function midtransPush(Request $request)
+    {
+        
     }
 }

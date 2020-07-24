@@ -34,6 +34,26 @@ class OrderItemController extends Controller
         ]);
     }
 
+    public function showAllJoin()
+    {
+        $data = OrderItem::with(array('order'=>function($query){
+            $query->select();
+        }))->with(array('product'=>function($query){
+            $query->select();
+        }))->get();
+        if(!$data) {
+            return response()->json([
+                "message" => "Data Not Found"
+            ]);
+        }
+
+        Log::info('Showing all author');
+
+        return response()->json([
+            "results" => $data
+        ]);
+    }
+
     public function showId($id)
     {
         $data = OrderItem::find($id);
@@ -44,6 +64,27 @@ class OrderItemController extends Controller
         }
 
         Log::info('Showing author by id');
+
+        return response()->json([
+            "results" => $data
+        ]);
+    }
+
+    public function showIdJoin($id)
+    {
+        $findId = OrderItem::find($id);
+        $data = OrderItem::where('id', $id)->with(array('order'=>function($query){
+            $query->select();
+        }))->with(array('product'=>function($query){
+            $query->select();
+        }))->get();
+        if(!$findId) {
+            return response()->json([
+                "message" => "Parameter Not Found"
+            ]);
+        }
+
+        Log::info('Showing author with post comment by id');
 
         return response()->json([
             "results" => $data
