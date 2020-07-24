@@ -157,7 +157,7 @@ class PaymentController extends Controller
         $enable_payments = array('bank_transfer');
 
         $transaction = array(
-            'enabled_payments' => $enable_payments,
+            'enabled_payments' => $payment->payment_type,
             'transaction_details' => $payment,
             'item_details' => $item_details,
         );
