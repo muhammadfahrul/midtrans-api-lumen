@@ -172,8 +172,7 @@ class OrderController extends Controller
         if($order) {
             $order->delete();
 
-            $order_item = OrderItem::where('order_id', $id);
-            $order_item->delete();
+            $order_item = OrderItem::where('order_id', $id)->delete();
 
             Log::info('Deleting order by id');
 
