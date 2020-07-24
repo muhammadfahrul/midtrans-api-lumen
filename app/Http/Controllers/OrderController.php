@@ -39,7 +39,7 @@ class OrderController extends Controller
 
     public function showAllJoin()
     {
-        $data = Order::with(array('orderitem'=>function($query){
+        $data = Order::with(array('customer'=>function($query){
             $query->select();
         }))->get();
         if(!$data) {
@@ -143,7 +143,7 @@ class OrderController extends Controller
             $order_detail = $request->input('data.attributes.order_detail');
 
             for ($i=0; $i < count($order_detail); $i++) { 
-                $order_item = OrderItem::where('order_id', $id)->first();
+                $order_item = OrderItem::where('order_id', $id)->get();
                 $order_item->product_id = $request->input('data.attributes.order_detail.'.$i.'.product_id');
                 $order_item->quantity = $request->input('data.attributes.order_detail.'.$i.'.quantity');
                 $order->orderitem()->save($order_item);
