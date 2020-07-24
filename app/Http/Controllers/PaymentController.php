@@ -112,33 +112,85 @@ class PaymentController extends Controller
 
     public function add(Request $request)
     {
-        $this->validate($request, [
-            'data.attributes.order_id' => 'required|exists:orders,id',
-            'data.attributes.transaction_id' => 'required',
-            'data.attributes.payment_type' => 'required',
-            'data.attributes.gross_amount' => 'required',
-            'data.attributes.transaction_time' => 'required',
-            'data.attributes.transaction_status' => 'required'
-        ]);
+        // $this->validate($request, [
+        //     'data.attributes.order_id' => 'required|exists:orders,id',
+        //     'data.attributes.transaction_id' => 'required',
+        //     'data.attributes.payment_type' => 'required',
+        //     'data.attributes.gross_amount' => 'required',
+        //     'data.attributes.transaction_time' => 'required',
+        //     'data.attributes.transaction_status' => 'required'
+        // ]);
         
-        $data = new Payment();
-        $data->order_id = $request->input('data.attributes.order_id');
-        $data->transaction_id = $request->input('data.attributes.transaction_id');
-        $data->payment_type = $request->input('data.attributes.payment_type');
-        $data->gross_amount = $request->input('data.attributes.gross_amount');
-        $data->transaction_time = $request->input('data.attributes.transaction_time');
-        $data->transaction_status = $request->input('data.attributes.transaction_status');
-        $data->save();
+        // $data = new Payment();
+        // $data->order_id = $request->input('data.attributes.order_id');
+        // $data->transaction_id = $request->input('data.attributes.transaction_id');
+        // $data->payment_type = $request->input('data.attributes.payment_type');
+        // $data->gross_amount = $request->input('data.attributes.gross_amount');
+        // $data->transaction_time = $request->input('data.attributes.transaction_time');
+        // $data->transaction_status = $request->input('data.attributes.transaction_status');
+        // $data->save();
 
-        Log::info('Adding payment');
+        // Log::info('Adding payment');
 
-        return response()->json([
-            "message" => "Success Added",
-            "status" => true,
-            "data" => [
-                "attributes" => $data
-            ]
-        ]);
+        // return response()->json([
+        //     "message" => "Success Added",
+        //     "status" => true,
+        //     "data" => [
+        //         "attributes" => $data
+        //     ]
+        // ]);
+        Config::$serverKey = 'SB-Mid-server-jMa1yoEHLCbuNPkScwv9LKwI';
+        if(!isset(Config::$serverKey))
+        {
+            return "Please set your payment server key";
+        }
+
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
+        $item_list[] = [
+            'id' => "111",
+            'price' => 20000,
+            'quantity' => 4,
+            'name' => "Majohn"
+        ];
+
+        $transaction_details = array(
+            'order_id' => rand(),
+            'gross_amount' => 20000, // no decimal allowed for creditcard
+        );
+
+        $customer_details = array(
+            'first_name'    => "Andri",
+            'last_name'     => "Litani",
+            'email'         => "andri@litani.com",
+            'phone'         => "081122334455",
+        );
+        // {
+        //     "data": {
+        //       "attributes": {
+        //       "payment_type": "bank_transfer",
+        //       "gross_amount": 20000,
+        //       "bank": "bni",
+        //       "order_id": 1
+        //       }
+        //     }
+        //   }
+        $transaction = array(
+            // 'enabled_payments' => $enable_payments,
+            'transaction_details' => $transaction_details,
+            'customer_details' => $customer_details,
+            'item_details' => $item_list,
+        );
+
+        try {
+            $snapToken = Snap::createTransaction($transaction);
+            return response()->json(['code' => 1 , 'message' => 'success' , 'result' => $snapToken]);
+            // return ['code' => 1 , 'message' => 'success' , 'result' => $snapToken];
+        } catch (\Exception $e) {
+            dd($e);
+            return ['code' => 0 , 'message' => 'failed'];
+        }
     }
 
     public function update(Request $request, $id)
