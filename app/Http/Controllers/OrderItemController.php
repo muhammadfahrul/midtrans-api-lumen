@@ -27,7 +27,7 @@ class OrderItemController extends Controller
             ]);
         }
 
-        Log::info('Showing all author');
+        Log::info('Showing all order item');
 
         return response()->json([
             "message" => "Success retrieve data",
@@ -49,7 +49,7 @@ class OrderItemController extends Controller
             ]);
         }
 
-        Log::info('Showing all author');
+        Log::info('Showing all order item');
 
         return response()->json([
             "message" => "Success retrieve data",
@@ -67,7 +67,7 @@ class OrderItemController extends Controller
             ]);
         }
 
-        Log::info('Showing author by id');
+        Log::info('Showing order item by id');
 
         return response()->json([
             "message" => "Success retrieve data",
@@ -90,7 +90,7 @@ class OrderItemController extends Controller
             ]);
         }
 
-        Log::info('Showing author with post comment by id');
+        Log::info('Showing order item with post comment by id');
 
         return response()->json([
             "message" => "Success retrieve data",
@@ -113,7 +113,7 @@ class OrderItemController extends Controller
         $data->quantity = $request->input('quantity');
         $data->save();
 
-        Log::info('Adding author');
+        Log::info('Adding order item');
 
         return response()->json([
             "message" => "Success Added",
@@ -139,7 +139,7 @@ class OrderItemController extends Controller
             $data->quantity = $request->input('quantity');
             $data->save();
 
-            Log::info('Updating author by id');
+            Log::info('Updating order item by id');
 
             return response()->json([
                 "message" => "Success Updated",
@@ -162,7 +162,7 @@ class OrderItemController extends Controller
         if($data) {
             $data->delete();
 
-            Log::info('Deleting author by id');
+            Log::info('Deleting order item by id');
 
             return response()->json([
                 "message" => "Success Deleted",

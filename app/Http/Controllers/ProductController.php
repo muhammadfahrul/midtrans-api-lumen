@@ -27,7 +27,7 @@ class ProductController extends Controller
             ]);
         }
 
-        Log::info('Showing all author');
+        Log::info('Showing all product');
 
         return response()->json([
             "message" => "Success retrieve data",
@@ -45,7 +45,7 @@ class ProductController extends Controller
             ]);
         }
 
-        Log::info('Showing author by id');
+        Log::info('Showing product by id');
 
         return response()->json([
             "message" => "Success retrieve data",
@@ -66,7 +66,7 @@ class ProductController extends Controller
         $data->price = $request->input('price');
         $data->save();
 
-        Log::info('Adding author');
+        Log::info('Adding product');
 
         return response()->json([
             "message" => "Success Added",
@@ -90,7 +90,7 @@ class ProductController extends Controller
             $data->price = $request->input('price');
             $data->save();
 
-            Log::info('Updating author by id');
+            Log::info('Updating product by id');
 
             return response()->json([
                 "message" => "Success Updated",
@@ -113,7 +113,7 @@ class ProductController extends Controller
         if($data) {
             $data->delete();
 
-            Log::info('Deleting author by id');
+            Log::info('Deleting product by id');
 
             return response()->json([
                 "message" => "Success Deleted",

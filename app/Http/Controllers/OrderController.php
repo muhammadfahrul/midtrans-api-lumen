@@ -27,7 +27,7 @@ class OrderController extends Controller
             ]);
         }
 
-        Log::info('Showing all author');
+        Log::info('Showing all order');
 
         return response()->json([
             "message" => "Success retrieve data",
@@ -47,7 +47,7 @@ class OrderController extends Controller
             ]);
         }
 
-        Log::info('Showing all author');
+        Log::info('Showing all order');
 
         return response()->json([
             "message" => "Success retrieve data",
@@ -65,7 +65,7 @@ class OrderController extends Controller
             ]);
         }
 
-        Log::info('Showing author by id');
+        Log::info('Showing order by id');
 
         return response()->json([
             "message" => "Success retrieve data",
@@ -86,7 +86,7 @@ class OrderController extends Controller
             ]);
         }
 
-        Log::info('Showing author with post comment by id');
+        Log::info('Showing order with post comment by id');
 
         return response()->json([
             "message" => "Success retrieve data",
@@ -107,7 +107,7 @@ class OrderController extends Controller
         $data->status = $request->input('status');
         $data->save();
 
-        Log::info('Adding author');
+        Log::info('Adding order');
 
         return response()->json([
             "message" => "Success Added",
@@ -131,7 +131,7 @@ class OrderController extends Controller
             $data->status = $request->input('status');
             $data->save();
 
-            Log::info('Updating author by id');
+            Log::info('Updating order by id');
 
             return response()->json([
                 "message" => "Success Updated",
@@ -154,7 +154,7 @@ class OrderController extends Controller
         if($data) {
             $data->delete();
 
-            Log::info('Deleting author by id');
+            Log::info('Deleting order by id');
 
             return response()->json([
                 "message" => "Success Deleted",
