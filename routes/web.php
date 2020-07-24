@@ -31,13 +31,13 @@ $router->get('/', function () use ($router) {
         $router->put('/order/{id}', 'OrderController@update');
         $router->delete('/order/{id}', 'OrderController@delete');
 
-        $router->get('/order-item', 'OrderItemController@showAll');
-        $router->get('/order-item-join', 'OrderItemController@showAllJoin');
-        $router->get('/order-item/{id}', 'OrderItemController@showId');
-        $router->get('/order-item-join/{id}', 'OrderItemController@showIdJoin');
-        $router->post('/order-item', 'OrderItemController@add');
-        $router->put('/order-item/{id}', 'OrderItemController@update');
-        $router->delete('/order-item/{id}', 'OrderItemController@delete');
+        // $router->get('/order-item', 'OrderItemController@showAll');
+        // $router->get('/order-item-join', 'OrderItemController@showAllJoin');
+        // $router->get('/order-item/{id}', 'OrderItemController@showId');
+        // $router->get('/order-item-join/{id}', 'OrderItemController@showIdJoin');
+        // $router->post('/order-item', 'OrderItemController@add');
+        // $router->put('/order-item/{id}', 'OrderItemController@update');
+        // $router->delete('/order-item/{id}', 'OrderItemController@delete');
     
         $router->get('/product', 'ProductController@showAll');
         $router->get('/product/{id}', 'ProductController@showId');
@@ -46,9 +46,9 @@ $router->get('/', function () use ($router) {
         $router->delete('/product/{id}', 'ProductController@delete');
     
         $router->get('/payment', 'PaymentController@showAll');
-        $router->get('/payment-join', 'PaymentController@showAllJoin');
+        // $router->get('/payment-join', 'PaymentController@showAllJoin');
         $router->get('/payment/{id}', 'PaymentController@showId');
-        $router->get('/payment-join/{id}', 'PaymentController@showIdJoin');
+        // $router->get('/payment-join/{id}', 'PaymentController@showIdJoin');
         $router->post('/payment', 'PaymentController@add');
         $router->put('/payment/{id}', 'PaymentController@update');
         $router->delete('/payment/{id}', 'PaymentController@delete');

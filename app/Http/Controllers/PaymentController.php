@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Payment;
+use App\Customer;
+use App\Order;
+use App\OrderItem;
+use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -119,12 +123,20 @@ class PaymentController extends Controller
             'data.attributes.order_id' => 'required|exists:orders,id'
         ]);
         
-        $data = new Payment();
-        $data->payment_type = $request->input('data.attributes.payment_type');
-        $data->gross_amount = $request->input('data.attributes.gross_amount');
-        $data->bank = $request->input('data.attributes.bank');
-        $data->order_id = $request->input('data.attributes.order_id');
-        $data->save();
+        $payment = new Payment();
+        $payment->payment_type = $request->input('data.attributes.payment_type');
+        $payment->gross_amount = $request->input('data.attributes.gross_amount');
+        $payment->bank = $request->input('data.attributes.bank');
+        $payment->order_id = $request->input('data.attributes.order_id');
+        $payment->save();
+
+        $orderitem = OrderItem::with(array('product'=>function($query){
+            $query->select();
+        }))->get();
+
+        $item_list[] = $orderitem;
+
+        $item_details = $item_list;
 
         Log::info('Adding payment');
 
@@ -141,7 +153,8 @@ class PaymentController extends Controller
 
         $transaction = array(
             'enabled_payments' => $enable_payments,
-            'transaction_details' => $data
+            'transaction_details' => $payment,
+            'item_details' => $item_details,
         );
 
         try {
@@ -151,7 +164,7 @@ class PaymentController extends Controller
                 'message' => 'Transaction successfully',
                 'status' => true,
                 'results' => $snapToken,
-                'data' => $data
+                'data' => $payment
             ]);
         } catch (\Exception $e) {
             dd($e);
