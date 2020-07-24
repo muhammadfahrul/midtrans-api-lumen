@@ -198,7 +198,7 @@ class PaymentController extends Controller
         );
 
         // Optional, remove this to display all available payment methods
-        $enable_payments = array('bni', 'bca');
+        $enable_payments = array('bank_transfer');
 
         // Fill transaction details
         $transaction = array(
