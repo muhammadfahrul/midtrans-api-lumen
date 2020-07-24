@@ -227,31 +227,35 @@ class PaymentController extends Controller
         $this->validate($request, [
             'data.attributes.payment_type' => 'required',
             'data.attributes.gross_amount' => 'required',
+            // 'data.attributes.bank' => 'required',
             'data.attributes.order_id' => 'required|exists:orders,id'
         ]);
         
-        // $data = Payment::find($id);
-        // if ($data) {
-        //     $data->payment_type = $request->input('data.attributes.payment_type');
-        //     $data->gross_amount = $request->input('data.attributes.gross_amount');
-        //     $data->bank = $request->input('data.attributes.bank');
-        //     $data->order_id = $request->input('data.attributes.order_id');
-        //     $data->save();
+        $data = Payment::find($id);
+        if ($data) {
+            $data->payment_type = $request->input('data.attributes.payment_type');
+            $data->gross_amount = $request->input('data.attributes.gross_amount');
+            // $data->bank = $request->input('data.attributes.bank');
+            $data->order_id = $request->input('data.attributes.order_id');
+            $data->transaction_id = 1;
+            $data->transaction_time = "";
+            $data->transaction_status = "";
+            $data->save();
 
-        //     Log::info('Updating payment by id');
+            Log::info('Updating payment by id');
 
-        //     return response()->json([
-        //         "message" => "Success Updated",
-        //         "status" => true,
-        //         "data" => [
-        //             "attributes" => $data
-        //         ]
-        //     ]);        
-        // }else {
-        //     return response()->json([
-        //         "message" => "Parameter Not Found"
-        //     ]);
-        // }
+            // return response()->json([
+            //     "message" => "Success Updated",
+            //     "status" => true,
+            //     "data" => [
+            //         "attributes" => $data
+            //     ]
+            // ]);        
+        }else {
+            return response()->json([
+                "message" => "Parameter Not Found"
+            ]);
+        }
 
         $item_list = array();
         $amount = 0;
@@ -264,58 +268,38 @@ class PaymentController extends Controller
         // Enable 3D-Secure
         Config::$is3ds = true;
         
-        // Required
+        $orderitem = OrderItem::where('order_id', $data->order_id)->with(array('product'=>function($query){
+            $query->select();
+        }))->get();
+        $array_item = [];
+        for ($i=0; $i < count($orderitem); $i++) { 
+            $array_item['id'] = $orderitem[$i]['product']['id'];
+            $array_item['price'] = $orderitem[$i]['product']['price'];
+            $array_item['quantity'] = $orderitem[$i]['quantity'];
+            $array_item['name'] = $orderitem[$i]['product']['name'];
+        }
 
-        $item_list[] = [
-                'id' => "124",
-                'price' => 12000,
-                'quantity' => 5,
-                'name' => "Mango"
-        ];
+        // Required
+        $item_details[] = $array_item;
 
         $transaction_details = array(
-            'order_id' => rand(),
-            'gross_amount' => 12000, // no decimal allowed for creditcard
+            'order_id' => $data->order_id,
+            'gross_amount' => $data->gross_amount, // no decimal allowed for creditcard
         );
 
-
-        // Optional
-        $item_details = $item_list;
-
-        // Optional
-        $billing_address = array(
-            'first_name'    => "Hujani",
-            'last_name'     => "Yunani",
-            'address'       => "Hukal 20",
-            'city'          => "Jakarta",
-            'postal_code'   => "51268",
-            'phone'         => "083256472910",
-            'country_code'  => 'IDN'
-        );
-
-        // Optional
-        $shipping_address = array(
-            'first_name'    => "Tukaki",
-            'last_name'     => "Rekosil",
-            'address'       => "Gujahi 90",
-            'city'          => "Jakarta",
-            'postal_code'   => "24115",
-            'phone'         => "085152726491",
-            'country_code'  => 'IDN'
-        );
+        $order = Order::find($data->order_id);
+        $customer = Customer::find($order->user_id);
 
         // Optional
         $customer_details = array(
-            'first_name'    => "Budi",
-            'last_name'     => "Badi",
-            'email'         => "buba@gmail.com",
-            'phone'         => "081245162718",
-            'billing_address'  => $billing_address,
-            'shipping_address' => $shipping_address
+            'full_name' => $customer->full_name,
+            'username' => $customer->username,
+            'email' => $customer->email,
+            'phone_number' => $customer->phone_number
         );
 
         // Optional, remove this to display all available payment methods
-        $enable_payments = array('bank_transfer');
+        $enable_payments = array($data->payment_type);
 
         // Fill transaction details
         $transaction = array(
@@ -328,24 +312,14 @@ class PaymentController extends Controller
         try {
             $snapToken = Snap::getSnapToken($transaction);
 
-            $data = Payment::find($id);
-            $data->payment_type = $request->input('data.attributes.payment_type');
-            $data->gross_amount = $request->input('data.attributes.gross_amount');
-            // $data->bank = $request->input('data.attributes.bank');
-            $data->order_id = $request->input('data.attributes.order_id');
-            $data->transaction_id = $transaction_details['order_id'];
-            $data->transaction_time = "";
-            $data->transaction_status = "";
-            $data->save();
-
             // return response()->json($snapToken);
             return response()->json([
                 "message" => "Transaction updated successfully",
                 "status" => true,
                 "results" => $snapToken,
-                // "data" => [
-                //     "attributes" => $data
-                // ]
+                "data" => [
+                    "attributes" => $data
+                ]
             ]);
         } catch (\Exception $e) {
             dd($e);
