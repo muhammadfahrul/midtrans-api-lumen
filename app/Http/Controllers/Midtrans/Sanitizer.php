@@ -46,33 +46,33 @@ class Sanitizer extends Controller
 
     private static function fieldCustomerDetails(&$field)
     {
-        $first_name = new self;
-        $field['first_name'] = $first_name
+        $full_name = new self;
+        $field['full_name'] = $full_name
             ->maxLength(20)
-            ->apply($field['first_name']);
-        if (array_key_exists('last_name', $field)) {
-            $last_name = new self;
-            $field['last_name'] = $last_name
+            ->apply($field['full_name']);
+        if (array_key_exists('username', $field)) {
+            $username = new self;
+            $field['username'] = $username
                 ->maxLength(20)
-                ->apply($field['last_name']);
+                ->apply($field['username']);
         }
         $email = new self;
         $field['email'] = $email
             ->maxLength(45)
             ->apply($field['email']);
 
-        static::fieldPhone($field['phone']);
+        static::fieldPhone($field['phone_number']);
 
-        if (!empty($field['billing_address']) || !empty($field['shipping_address'])) {
-            $keys = array('billing_address', 'shipping_address');
-            foreach ($keys as $key) {
-                if (!array_key_exists($key, $field)) continue;
+        // if (!empty($field['billing_address']) || !empty($field['shipping_address'])) {
+        //     $keys = array('billing_address', 'shipping_address');
+        //     foreach ($keys as $key) {
+        //         if (!array_key_exists($key, $field)) continue;
 
-                $camel = static::upperCamelize($key);
-                $function = "field$camel";
-                static::$function($field[$key]);
-            }
-        }
+        //         $camel = static::upperCamelize($key);
+        //         $function = "field$camel";
+        //         static::$function($field[$key]);
+        //     }
+        // }
         
     }
 
