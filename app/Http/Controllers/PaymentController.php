@@ -167,7 +167,7 @@ class PaymentController extends Controller
             'phone'         => "081122334455",
         );
         
-        $enable_payments = array('bni', 'bca');
+        $enable_payments = array('bank_transfer');
 
         $transaction = array(
             'enabled_payments' => $enable_payments,
