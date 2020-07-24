@@ -102,8 +102,8 @@ class OrderItemController extends Controller
     public function add(Request $request)
     {
         $this->validate($request, [
-            'order_id' => 'required',
-            'product_id' => 'required',
+            'order_id' => 'required|exists:orders,id',
+            'product_id' => 'required|exists:products,id',
             'quantity' => 'required'
         ]);
         
@@ -127,8 +127,8 @@ class OrderItemController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'order_id' => 'required',
-            'product_id' => 'required',
+            'order_id' => 'required|exists:orders,id',
+            'product_id' => 'required|exists:products,id',
             'quantity' => 'required'
         ]);
         

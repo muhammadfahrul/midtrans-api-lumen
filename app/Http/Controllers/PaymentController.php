@@ -98,7 +98,7 @@ class PaymentController extends Controller
     public function add(Request $request)
     {
         $this->validate($request, [
-            'order_id' => 'required',
+            'order_id' => 'required|exists:orders,id',
             'transaction_id' => 'required',
             'payment_type' => 'required',
             'gross_amount' => 'required',
@@ -129,7 +129,7 @@ class PaymentController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'order_id' => 'required',
+            'order_id' => 'required|exists:orders,id',
             'transaction_id' => 'required',
             'payment_type' => 'required',
             'gross_amount' => 'required',
