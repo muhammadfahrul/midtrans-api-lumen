@@ -99,8 +99,7 @@ class OrderController extends Controller
     public function add(Request $request)
     {
         $this->validate($request, [
-            'data.attributes.user_id' => 'required|exists:customers,id',
-            'data.attributes.status' => 'required'
+            'data.attributes.user_id' => 'required|exists:customers,id'
         ]);
         
         $order = new Order();
@@ -128,8 +127,7 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'data.attributes.user_id' => 'required|exists:customers,id',
-            'data.attributes.status' => 'required'
+            'data.attributes.user_id' => 'required|exists:customers,id'
         ]);
         
         $data = Order::find($id);
