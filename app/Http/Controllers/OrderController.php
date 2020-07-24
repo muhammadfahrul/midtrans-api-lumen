@@ -134,11 +134,20 @@ class OrderController extends Controller
             'data.attributes.user_id' => 'required|exists:customers,id'
         ]);
         
-        $data = Order::find($id);
-        if ($data) {
-            $data->user_id = $request->input('data.attributes.user_id');
-            $data->status = "created";
-            $data->save();
+        $order = Order::find($id);
+        if ($order) {
+            $order->user_id = $request->input('data.attributes.user_id');
+            $order->status = "created";
+            $order->save();
+
+            $order_detail = $request->input('data.attributes.order_detail');
+
+            for ($i=0; $i < count($order_detail); $i++) { 
+                $order_item = OrderItem::where('order_id', $id)->get();
+                $order_item->product_id = $request->input('data.attributes.order_detail.'.$i.'.product_id');
+                $order_item->quantity = $request->input('data.attributes.order_detail.'.$i.'.quantity');
+                $order->orderitem()->save($order_item);
+            }
 
             Log::info('Updating order by id');
 
@@ -146,7 +155,7 @@ class OrderController extends Controller
                 "message" => "Success Updated",
                 "status" => true,
                 "data" => [
-                    "attributes" => $data
+                    "attributes" => $order
                 ]
             ]);        
         }else {
@@ -159,9 +168,12 @@ class OrderController extends Controller
 
     public function delete($id)
     {
-        $data = Order::find($id);
-        if($data) {
-            $data->delete();
+        $order = Order::find($id);
+        if($order) {
+            $order->delete();
+
+            $order_item = OrderItem::where('order_id', $id)->get();
+            $order_item->delete();
 
             Log::info('Deleting order by id');
 
@@ -169,7 +181,7 @@ class OrderController extends Controller
                 "message" => "Success Deleted",
                 "status" => true,
                 "data" => [
-                    "attributes" => $data
+                    "attributes" => $order
                 ]
             ]);   
         }else {
