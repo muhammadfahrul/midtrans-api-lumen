@@ -107,11 +107,15 @@ class OrderController extends Controller
         $order->status = "created";
         $order->save();
 
-        $order_item = new OrderItem();
-        $order_item->order_id = $order->id;
-        $order_item->product_id = $request->input('data.attributes.order_detail.product_id');
-        $order_item->quantity = $request->input('data.attributes.order_detail.quantity');
-        $order->orderitem()->save($order_item);
+        $order_detail = $request->input('data.attributes.order_detail');
+
+        for ($i=0; $i < count($order_detail); $i++) { 
+            $order_item = new OrderItem();
+            $order_item->order_id = $order->id;
+            $order_item->product_id = $request->input('data.attributes.order_detail.'.$i.'.product_id');
+            $order_item->quantity = $request->input('data.attributes.order_detail.'.$i.'.quantity');
+            $order->orderitem()->save($order_item);
+        }
 
         Log::info('Adding order');
 
