@@ -112,12 +112,11 @@ class PaymentController extends Controller
 
     public function add(Request $request)
     {
-        // $this->validate($request, [
-        //     'data.attributes.payment_type' => 'required',
-        //     'data.attributes.gross_amount' => 'required',
-        //     'data.attributes.bank' => 'required',
-        //     'data.attributes.order_id' => 'required|exists:orders,id'
-        // ]);
+        $this->validate($request, [
+            'data.attributes.payment_type' => 'required',
+            'data.attributes.gross_amount' => 'required',
+            'data.attributes.order_id' => 'required|exists:orders,id'
+        ]);
         
         // $data = new Payment();
         // $data->payment_type = $request->input('data.attributes.payment_type');
@@ -247,12 +246,11 @@ class PaymentController extends Controller
 
     public function update(Request $request, $id)
     {
-        // $this->validate($request, [
-        //     'data.attributes.payment_type' => 'required',
-        //     'data.attributes.gross_amount' => 'required',
-        //     'data.attributes.bank' => 'required',
-        //     'data.attributes.order_id' => 'required|exists:orders,id'
-        // ]);
+        $this->validate($request, [
+            'data.attributes.payment_type' => 'required',
+            'data.attributes.gross_amount' => 'required',
+            'data.attributes.order_id' => 'required|exists:orders,id'
+        ]);
         
         // $data = Payment::find($id);
         // if ($data) {
