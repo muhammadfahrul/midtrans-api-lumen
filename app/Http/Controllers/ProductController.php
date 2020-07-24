@@ -61,7 +61,7 @@ class ProductController extends Controller
             'price' => 'required'
         ]);
         
-        $data = new Order();
+        $data = new Product();
         $data->name = $request->input('name');
         $data->price = $request->input('price');
         $data->save();
