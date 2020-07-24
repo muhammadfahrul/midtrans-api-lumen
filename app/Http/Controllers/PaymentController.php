@@ -3,6 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Payment;
+use App\Customer;
+use App\Order;
+use App\OrderItem;
+use App\Product;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -115,6 +119,7 @@ class PaymentController extends Controller
         $this->validate($request, [
             'data.attributes.payment_type' => 'required',
             'data.attributes.gross_amount' => 'required',
+            // 'data.attributes.bank' => 'required',
             'data.attributes.order_id' => 'required|exists:orders,id'
         ]);
         
@@ -149,54 +154,34 @@ class PaymentController extends Controller
         // Enable 3D-Secure
         Config::$is3ds = true;
         
-        // Required
+        $orderitem = OrderItem::where('order_id', $data->order_id)->with(array('product'=>function($query){
+            $query->select();
+        }))->get();
+        $array_item = [];
+        for ($i=0; $i < count($orderitem); $i++) { 
+            $array_item['id'] = $orderitem[$i]['product']['id'];
+            $array_item['price'] = $orderitem[$i]['product']['price'];
+            $array_item['quantity'] = $orderitem[$i]['quantity'];
+            $array_item['name'] = $orderitem[$i]['product']['name'];
+        }
 
-        $item_list[] = [
-                'id' => "151",
-                'price' => 20000,
-                'quantity' => 4,
-                'name' => "Apple"
-        ];
+        // Required
+        $item_details[] = $array_item;
 
         $transaction_details = array(
             'order_id' => $data->order_id,
             'gross_amount' => $data->gross_amount, // no decimal allowed for creditcard
         );
 
-
-        // Optional
-        $item_details = $item_list;
-
-        // Optional
-        $billing_address = array(
-            'first_name'    => "Andri",
-            'last_name'     => "Litani",
-            'address'       => "Mangga 20",
-            'city'          => "Jakarta",
-            'postal_code'   => "16602",
-            'phone'         => "081122334455",
-            'country_code'  => 'IDN'
-        );
-
-        // Optional
-        $shipping_address = array(
-            'first_name'    => "Obet",
-            'last_name'     => "Supriadi",
-            'address'       => "Manggis 90",
-            'city'          => "Jakarta",
-            'postal_code'   => "16601",
-            'phone'         => "08113366345",
-            'country_code'  => 'IDN'
-        );
+        $order = Order::find($data->order_id);
+        $customer = Customer::find($order->user_id);
 
         // Optional
         $customer_details = array(
-            'first_name'    => "Andri",
-            'last_name'     => "Litani",
-            'email'         => "andri@litani.com",
-            'phone'         => "081122334455",
-            'billing_address'  => $billing_address,
-            'shipping_address' => $shipping_address
+            'full_name' => $customer->full_name,
+            'username' => $customer->username,
+            'email' => $customer->email,
+            'phone_number' => $customer->phone_number
         );
 
         // Optional, remove this to display all available payment methods
