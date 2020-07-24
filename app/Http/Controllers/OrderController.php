@@ -19,27 +19,27 @@ class OrderController extends Controller
         //
     }
 
-    public function showAll()
-    {
-        $data = Order::all();
-        if(!$data) {
-            return response()->json([
-                "message" => "Data Not Found"
-            ]);
-        }
+    // public function showAll()
+    // {
+    //     $data = Order::all();
+    //     if(!$data) {
+    //         return response()->json([
+    //             "message" => "Data Not Found"
+    //         ]);
+    //     }
 
-        Log::info('Showing all order');
+    //     Log::info('Showing all order');
 
-        return response()->json([
-            "message" => "Success retrieve data",
-            "status" => true,
-            "data" => $data
-        ]);
-    }
+    //     return response()->json([
+    //         "message" => "Success retrieve data",
+    //         "status" => true,
+    //         "data" => $data
+    //     ]);
+    // }
 
     public function showAllJoin()
     {
-        $data = Order::with(array('customer'=>function($query){
+        $data = Order::with(array('orderitem'=>function($query){
             $query->select();
         }))->get();
         if(!$data) {
@@ -57,28 +57,28 @@ class OrderController extends Controller
         ]);
     }
 
-    public function showId($id)
-    {
-        $data = Order::find($id);
-        if(!$data) {
-            return response()->json([
-                "message" => "Parameter Not Found"
-            ]);
-        }
+    // public function showId($id)
+    // {
+    //     $data = Order::find($id);
+    //     if(!$data) {
+    //         return response()->json([
+    //             "message" => "Parameter Not Found"
+    //         ]);
+    //     }
 
-        Log::info('Showing order by id');
+    //     Log::info('Showing order by id');
 
-        return response()->json([
-            "message" => "Success retrieve data",
-            "status" => true,
-            "data" => $data
-        ]);
-    }
+    //     return response()->json([
+    //         "message" => "Success retrieve data",
+    //         "status" => true,
+    //         "data" => $data
+    //     ]);
+    // }
 
     public function showIdJoin($id)
     {
         $findId = Order::find($id);
-        $data = Order::where('id', $id)->with(array('customer'=>function($query){
+        $data = Order::where('id', $id)->with(array('orderitem'=>function($query){
             $query->select();
         }))->get();
         if(!$findId) {
@@ -143,7 +143,7 @@ class OrderController extends Controller
             $order_detail = $request->input('data.attributes.order_detail');
 
             for ($i=0; $i < count($order_detail); $i++) { 
-                $order_item = OrderItem::where('order_id', $id)->get();
+                $order_item = OrderItem::where('order_id', $id)->first();
                 $order_item->product_id = $request->input('data.attributes.order_detail.'.$i.'.product_id');
                 $order_item->quantity = $request->input('data.attributes.order_detail.'.$i.'.quantity');
                 $order->orderitem()->save($order_item);

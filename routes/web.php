@@ -23,10 +23,10 @@ $router->get('/', function () use ($router) {
         $router->put('/customer/{id}', 'CustomerController@update');
         $router->delete('/customer/{id}', 'CustomerController@delete');
 
-        $router->get('/order', 'OrderController@showAll');
-        $router->get('/order-join', 'OrderController@showAllJoin');
-        $router->get('/order/{id}', 'OrderController@showId');
-        $router->get('/order-join/{id}', 'OrderController@showIdJoin');
+        $router->get('/order', 'OrderController@showAllJoin');
+        // $router->get('/order-join', 'OrderController@showAllJoin');
+        $router->get('/order/{id}', 'OrderController@showIdJoin');
+        // $router->get('/order-join/{id}', 'OrderController@showIdJoin');
         $router->post('/order', 'OrderController@add');
         $router->put('/order/{id}', 'OrderController@update');
         $router->delete('/order/{id}', 'OrderController@delete');
