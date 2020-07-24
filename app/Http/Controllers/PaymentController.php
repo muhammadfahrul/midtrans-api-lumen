@@ -185,11 +185,11 @@ class PaymentController extends Controller
         );
 
         // Optional, remove this to display all available payment methods
-        // $enable_payments = array('bank_transfer');
+        $enable_payments = array($data->payment_type);
 
         // Fill transaction details
         $transaction = array(
-            'enabled_payments' => $data->payment_type,
+            'enabled_payments' => $enable_payments,
             'transaction_details' => $transaction_details,
             'customer_details' => $customer_details,
             'item_details' => $item_details,
