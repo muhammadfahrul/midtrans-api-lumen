@@ -102,15 +102,15 @@ class OrderItemController extends Controller
     public function add(Request $request)
     {
         $this->validate($request, [
-            'order_id' => 'required|exists:orders,id',
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required'
+            'data.attributes.order_id' => 'required|exists:orders,id',
+            'data.attributes.product_id' => 'required|exists:products,id',
+            'data.attributes.quantity' => 'required'
         ]);
         
         $data = new OrderItem();
-        $data->order_id = $request->input('order_id');
-        $data->product_id = $request->input('product_id');
-        $data->quantity = $request->input('quantity');
+        $data->order_id = $request->input('data.attributes.order_id');
+        $data->product_id = $request->input('data.attributes.product_id');
+        $data->quantity = $request->input('data.attributes.quantity');
         $data->save();
 
         Log::info('Adding order item');
@@ -127,16 +127,16 @@ class OrderItemController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'order_id' => 'required|exists:orders,id',
-            'product_id' => 'required|exists:products,id',
-            'quantity' => 'required'
+            'data.attributes.order_id' => 'required|exists:orders,id',
+            'data.attributes.product_id' => 'required|exists:products,id',
+            'data.attributes.quantity' => 'required'
         ]);
         
         $data = OrderItem::find($id);
         if ($data) {
-            $data->order_id = $request->input('order_id');
-            $data->product_id = $request->input('product_id');
-            $data->quantity = $request->input('quantity');
+            $data->order_id = $request->input('data.attributes.order_id');
+            $data->product_id = $request->input('data.attributes.product_id');
+            $data->quantity = $request->input('data.attributes.quantity');
             $data->save();
 
             Log::info('Updating order item by id');

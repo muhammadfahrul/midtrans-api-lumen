@@ -98,13 +98,13 @@ class OrderController extends Controller
     public function add(Request $request)
     {
         $this->validate($request, [
-            'user_id' => 'required|exists:customers,id',
-            'status' => 'required'
+            'data.attributes.user_id' => 'required|exists:customers,id',
+            'data.attributes.status' => 'required'
         ]);
         
         $data = new Order();
-        $data->user_id = $request->input('user_id');
-        $data->status = $request->input('status');
+        $data->user_id = $request->input('data.attributes.user_id');
+        $data->status = $request->input('data.attributes.status');
         $data->save();
 
         Log::info('Adding order');
@@ -121,14 +121,14 @@ class OrderController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'user_id' => 'required|exists:customers,id',
-            'status' => 'required'
+            'data.attributes.user_id' => 'required|exists:customers,id',
+            'data.attributes.status' => 'required'
         ]);
         
         $data = Order::find($id);
         if ($data) {
-            $data->user_id = $request->input('user_id');
-            $data->status = $request->input('status');
+            $data->user_id = $request->input('data.attributes.user_id');
+            $data->status = $request->input('data.attributes.status');
             $data->save();
 
             Log::info('Updating order by id');

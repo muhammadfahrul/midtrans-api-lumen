@@ -57,13 +57,13 @@ class ProductController extends Controller
     public function add(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'price' => 'required'
+            'data.attributes.name' => 'required',
+            'data.attributes.price' => 'required'
         ]);
         
         $data = new Product();
-        $data->name = $request->input('name');
-        $data->price = $request->input('price');
+        $data->name = $request->input('data.attributes.name');
+        $data->price = $request->input('data.attributes.price');
         $data->save();
 
         Log::info('Adding product');
@@ -80,14 +80,14 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'price' => 'required'
+            'data.attributes.name' => 'required',
+            'data.attributes.price' => 'required'
         ]);
         
         $data = Product::find($id);
         if ($data) {
-            $data->name = $request->input('name');
-            $data->price = $request->input('price');
+            $data->name = $request->input('data.attributes.name');
+            $data->price = $request->input('data.attributes.price');
             $data->save();
 
             Log::info('Updating product by id');

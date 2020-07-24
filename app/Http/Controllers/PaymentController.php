@@ -98,21 +98,21 @@ class PaymentController extends Controller
     public function add(Request $request)
     {
         $this->validate($request, [
-            'order_id' => 'required|exists:orders,id',
-            'transaction_id' => 'required',
-            'payment_type' => 'required',
-            'gross_amount' => 'required',
-            'transaction_time' => 'required',
-            'transaction_status' => 'required'
+            'data.attributes.order_id' => 'required|exists:orders,id',
+            'data.attributes.transaction_id' => 'required',
+            'data.attributes.payment_type' => 'required',
+            'data.attributes.gross_amount' => 'required',
+            'data.attributes.transaction_time' => 'required',
+            'data.attributes.transaction_status' => 'required'
         ]);
         
         $data = new Payment();
-        $data->order_id = $request->input('order_id');
-        $data->transaction_id = $request->input('transaction_id');
-        $data->payment_type = $request->input('payment_type');
-        $data->gross_amount = $request->input('gross_amount');
-        $data->transaction_time = $request->input('transaction_time');
-        $data->transaction_status = $request->input('transaction_status');
+        $data->order_id = $request->input('data.attributes.order_id');
+        $data->transaction_id = $request->input('data.attributes.transaction_id');
+        $data->payment_type = $request->input('data.attributes.payment_type');
+        $data->gross_amount = $request->input('data.attributes.gross_amount');
+        $data->transaction_time = $request->input('data.attributes.transaction_time');
+        $data->transaction_status = $request->input('data.attributes.transaction_status');
         $data->save();
 
         Log::info('Adding payment');
@@ -129,22 +129,22 @@ class PaymentController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'order_id' => 'required|exists:orders,id',
-            'transaction_id' => 'required',
-            'payment_type' => 'required',
-            'gross_amount' => 'required',
-            'transaction_time' => 'required',
-            'transaction_status' => 'required'
+            'data.attributes.order_id' => 'required|exists:orders,id',
+            'data.attributes.transaction_id' => 'required',
+            'data.attributes.payment_type' => 'required',
+            'data.attributes.gross_amount' => 'required',
+            'data.attributes.transaction_time' => 'required',
+            'data.attributes.transaction_status' => 'required'
         ]);
         
         $data = Payment::find($id);
         if ($data) {
-            $data->order_id = $request->input('order_id');
-            $data->transaction_id = $request->input('transaction_id');
-            $data->payment_type = $request->input('payment_type');
-            $data->gross_amount = $request->input('gross_amount');
-            $data->transaction_time = $request->input('transaction_time');
-            $data->transaction_status = $request->input('transaction_status');
+            $data->order_id = $request->input('data.attributes.order_id');
+            $data->transaction_id = $request->input('data.attributes.transaction_id');
+            $data->payment_type = $request->input('data.attributes.payment_type');
+            $data->gross_amount = $request->input('data.attributes.gross_amount');
+            $data->transaction_time = $request->input('data.attributes.transaction_time');
+            $data->transaction_status = $request->input('data.attributes.transaction_status');
             $data->save();
 
             Log::info('Updating payment by id');
