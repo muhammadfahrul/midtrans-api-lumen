@@ -210,6 +210,17 @@ class PaymentController extends Controller
         // return $transaction;
         try {
             $snapToken = Snap::getSnapToken($transaction);
+
+            $data = new Payment();
+            $data->payment_type = $request->input('data.attributes.payment_type');
+            $data->gross_amount = $request->input('data.attributes.gross_amount');
+            // $data->bank = $request->input('data.attributes.bank');
+            $data->order_id = $request->input('data.attributes.order_id');
+            $data->transaction_id = $transaction_details['order_id'];
+            $data->transaction_time = "";
+            $data->transaction_status = "";
+            $data->save();
+
             // return response()->json($snapToken);
             return response()->json([
                 "message" => "Transaction added successfully",
@@ -340,6 +351,17 @@ class PaymentController extends Controller
         // return $transaction;
         try {
             $snapToken = Snap::getSnapToken($transaction);
+
+            $data = Payment::find($id);
+            $data->payment_type = $request->input('data.attributes.payment_type');
+            $data->gross_amount = $request->input('data.attributes.gross_amount');
+            // $data->bank = $request->input('data.attributes.bank');
+            $data->order_id = $request->input('data.attributes.order_id');
+            $data->transaction_id = $transaction_details['order_id'];
+            $data->transaction_time = "";
+            $data->transaction_status = "";
+            $data->save();
+
             // return response()->json($snapToken);
             return response()->json([
                 "message" => "Transaction updated successfully",
