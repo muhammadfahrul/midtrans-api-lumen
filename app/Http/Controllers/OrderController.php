@@ -39,7 +39,7 @@ class OrderController extends Controller
 
     public function showAllJoin()
     {
-        $data = Order::with(array('customer'=>function($query){
+        $data = Order::with(array('orderitem'=>function($query){
             $query->select();
         }))->get();
         if(!$data) {
