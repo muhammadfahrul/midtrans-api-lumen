@@ -105,7 +105,7 @@ class OrderController extends Controller
         
         $order = new Order();
         $order->user_id = $request->input('data.attributes.user_id');
-        $order->status = $request->input('data.attributes.status');
+        $order->status = "created";
         $order->save();
 
         $order_item = new OrderItem();
@@ -135,7 +135,7 @@ class OrderController extends Controller
         $data = Order::find($id);
         if ($data) {
             $data->user_id = $request->input('data.attributes.user_id');
-            $data->status = $request->input('data.attributes.status');
+            $data->status = "created";
             $data->save();
 
             Log::info('Updating order by id');
