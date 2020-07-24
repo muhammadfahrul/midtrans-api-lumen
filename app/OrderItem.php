@@ -9,11 +9,11 @@ class OrderItem extends Model
     protected $table = 'order_items';
     public $keyType = 'string';
 
-    // public function post(){
-    //     return $this->hasMany('App\Post');
-    // }
+    public function order(){
+        return $this->belongsTo('App\Order');
+    }
 
-    // public function comment(){
-    //     return $this->hasMany('App\Comment');
-    // }
+    public function product(){
+        return $this->belongsTo('App\Product');
+    }
 }

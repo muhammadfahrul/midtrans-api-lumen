@@ -9,11 +9,15 @@ class Order extends Model
     protected $table = 'orders';
     public $keyType = 'string';
 
-    // public function post(){
-    //     return $this->hasMany('App\Post');
-    // }
+    public function customer(){
+        return $this->belongsTo('App\Customer');
+    }
 
-    // public function comment(){
-    //     return $this->hasMany('App\Comment');
-    // }
+    public function orderitem(){
+        return $this->hasMany('App\OrderItem');
+    }
+
+    public function payment(){
+        return $this->hasMany('App\Payment');
+    }
 }

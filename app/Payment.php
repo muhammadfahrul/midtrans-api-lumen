@@ -9,11 +9,7 @@ class Payment extends Model
     protected $table = 'payments';
     public $keyType = 'string';
 
-    // public function post(){
-    //     return $this->hasMany('App\Post');
-    // }
-
-    // public function comment(){
-    //     return $this->hasMany('App\Comment');
-    // }
+    public function order(){
+        return $this->belongsTo('App\Order');
+    }
 }

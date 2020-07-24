@@ -14,3 +14,32 @@
 $router->get('/', function () use ($router) {
     return $router->app->version();
 });
+
+// $router->group(['middleware' => 'authjwt'], function () use ($router) {
+    $router->group(['prefix' => 'api/v1'], function () use ($router) {
+        $router->get('/customer', 'CustomerController@showAll');
+        $router->get('/customer/{id}', 'CustomerController@showId');
+        $router->post('/customer', 'CustomerController@add');
+        $router->put('/customer/{id}', 'CustomerController@update');
+        $router->delete('/customer/{id}', 'CustomerController@delete');
+
+        $router->get('/order', 'OrderController@showAll');
+        $router->get('/order/{id}', 'OrderController@showId');
+        $router->post('/order', 'OrderController@add');
+        $router->put('/order/{id}', 'OrderController@update');
+        $router->delete('/order/{id}', 'OrderController@delete');
+    
+        $router->get('/product', 'ProductController@showAll');
+        $router->get('/product/{id}', 'ProductController@showId');
+        $router->post('/product', 'ProductController@add');
+        $router->put('/product/{id}', 'ProductController@update');
+        $router->delete('/product/{id}', 'ProductController@delete');
+    
+        $router->get('/payment', 'PaymentController@showAll');
+        $router->get('/payment/{id}', 'PaymentController@showId');
+        $router->post('/payment', 'PaymentController@add');
+        $router->put('/payment/{id}', 'PaymentController@update');
+        $router->delete('/payment/{id}', 'PaymentController@delete');
+        $router->post('/payment/midtrans/push', 'PaymentController@midtransPush');
+    });
+// });
