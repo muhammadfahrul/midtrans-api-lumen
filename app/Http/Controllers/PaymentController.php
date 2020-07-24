@@ -181,10 +181,10 @@ class PaymentController extends Controller
             'shipping_address' => $shipping_address
         );
         
-        // $enable_payments = array('bank_transfer');
+        $enable_payments = array('bank_transfer');
 
         $transaction = array(
-            'enabled_payments' => $payment->bank,
+            'enabled_payments' => $enable_payments,
             'transaction_details' => $payment,
             'customer_details' => $customer_details,
             'item_details' => $item_details,
