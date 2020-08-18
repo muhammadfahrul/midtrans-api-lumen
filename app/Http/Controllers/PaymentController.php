@@ -288,24 +288,24 @@ class PaymentController extends Controller
 
     public function midtransPush(Request $request)
     {
-        // $req = $request->all();
-        $pay = Payment::where('order_id', $request->input('order_id'))->get();
+        $req = $request->all();
+        $pay = Payments::where('order_id', $req['order_id'])->get();
         // return $pay;
-        $pays = Payment::find($pay[0]->id);
+        $pays = Payments::find($pay[0]->id);
         if(!$pay)
         {
             return response()->json([
-                "message" => "Order id not found",
-                "status" => false
+                "messages"=> "Order id not found",
+                "status"=>"error"
             ]);
         }
-        $pays->transaction_time = $request->input('transaction_time');
-        $pays->transaction_status = $request->input('transaction_status');
-        $pays->transaction_id = $request->input('transaction_id');
+        $pays->transaction_time = $req['transaction_time'];
+        $pays->transaction_status = $req['transaction_status'];
+        $pays->transaction_id = $req['transaction_id'];
         if($pays->save())
         {
             return response()->json([
-                "message" => "Transaction changes"
+                "messages"=> "Transaction changes"
             ], 200);
         }
     }
