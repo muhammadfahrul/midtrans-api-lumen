@@ -15,7 +15,7 @@ $router->get('/', function () use ($router) {
     return $router->app->version();
 });
 
-// $router->group(['middleware' => 'authjwt'], function () use ($router) {
+$router->group(['middleware' => 'authjwt'], function () use ($router) {
     $router->group(['prefix' => 'api/v1'], function () use ($router) {
         $router->get('/customer', 'CustomerController@showAll');
         $router->get('/customer/{id}', 'CustomerController@showId');
@@ -54,4 +54,4 @@ $router->get('/', function () use ($router) {
         $router->delete('/payment/{id}', 'PaymentController@delete');
         $router->post('/payment/midtrans/push', 'PaymentController@midtransPush');
     });
-// });
+});

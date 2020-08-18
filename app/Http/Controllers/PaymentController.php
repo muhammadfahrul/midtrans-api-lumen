@@ -128,9 +128,9 @@ class PaymentController extends Controller
         $data->gross_amount = $request->input('data.attributes.gross_amount');
         // $data->bank = $request->input('data.attributes.bank');
         $data->order_id = $request->input('data.attributes.order_id');
-        $data->transaction_id = 1;
+        $data->transaction_id = "";
         $data->transaction_time = "";
-        $data->transaction_status = "";
+        $data->transaction_status = "created";
         $data->save();
 
         Log::info('Adding payment');
@@ -196,7 +196,7 @@ class PaymentController extends Controller
         );
         // return $transaction;
         try {
-            $snapToken = Snap::getSnapToken($transaction);
+            $snapToken = Snap::createTransaction($transaction);
 
             // return response()->json($snapToken);
             return response()->json([
@@ -224,116 +224,44 @@ class PaymentController extends Controller
 
     public function update(Request $request, $id)
     {
-        $this->validate($request, [
-            'data.attributes.payment_type' => 'required',
-            'data.attributes.gross_amount' => 'required',
-            // 'data.attributes.bank' => 'required',
-            'data.attributes.order_id' => 'required|exists:orders,id'
-        ]);
-        
-        $data = Payment::find($id);
-        if ($data) {
-            $data->payment_type = $request->input('data.attributes.payment_type');
-            $data->gross_amount = $request->input('data.attributes.gross_amount');
-            // $data->bank = $request->input('data.attributes.bank');
-            $data->order_id = $request->input('data.attributes.order_id');
-            $data->transaction_id = 1;
-            $data->transaction_time = "";
-            $data->transaction_status = "";
-            $data->save();
-
-            Log::info('Updating payment by id');
-
-            // return response()->json([
-            //     "message" => "Success Updated",
-            //     "status" => true,
-            //     "data" => [
-            //         "attributes" => $data
-            //     ]
-            // ]);        
-        }else {
-            return response()->json([
-                "message" => "Parameter Not Found"
-            ]);
-        }
-
-        $item_list = array();
-        $amount = 0;
+        $data = $this->getById($id);
+        $data = $data->data;
+        $id_order = $data->order_id;
         Config::$serverKey = 'SB-Mid-server-VbqKS4xIPoo0ZR3Qu3xKt8Jj';
-        if (!isset(Config::$serverKey)) {
+        if(!isset(Config::$serverKey))
+        {
             return "Please set your payment server key";
         }
+
         Config::$isSanitized = true;
-
-        // Enable 3D-Secure
         Config::$is3ds = true;
-        
-        $orderitem = OrderItem::where('order_id', $data->order_id)->with(array('product'=>function($query){
-            $query->select();
-        }))->get();
-        $array_item = [];
-        for ($i=0; $i < count($orderitem); $i++) { 
-            $array_item['id'] = $orderitem[$i]['product']['id'];
-            $array_item['price'] = $orderitem[$i]['product']['price'];
-            $array_item['quantity'] = $orderitem[$i]['quantity'];
-            $array_item['name'] = $orderitem[$i]['product']['name'];
-        }
+        $url = "https://api.sandbox.midtrans.com/v2/". $id_order. "/status";
+        $curl = curl_init("$url");
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            'Authorization: Basic ' . base64_encode(Config::$serverKey.':'),
+            'Content-Type: application/json',
+                'Accept: application/json',
+        ));
 
-        // Required
-        $item_details[] = $array_item;
+        $response = curl_exec($curl);
+        curl_close($curl);
+        $res = response()->json($response);
 
-        $transaction_details = array(
-            'order_id' => $data->order_id,
-            'gross_amount' => $data->gross_amount, // no decimal allowed for creditcard
-        );
+        return $this->saveUpdate($res, $id);
+    }
 
-        $order = Order::find($data->order_id);
-        $customer = Customer::find($order->user_id);
+    public function saveUpdate($data,$id)
+    {
+        $data = json_decode($data);
+        $orders = Orders::find($id);
+        $orders->transaction_time = $data->transaction_time;
+        $orders->transaction_status = $data->transaction_status;
+        $orders->transaction_id = $data->transaction_id;
+        $orders->save();
 
-        // Optional
-        $customer_details = array(
-            'full_name' => $customer->full_name,
-            'username' => $customer->username,
-            'email' => $customer->email,
-            'phone_number' => $customer->phone_number
-        );
-
-        // Optional, remove this to display all available payment methods
-        $enable_payments = array($data->payment_type);
-
-        // Fill transaction details
-        $transaction = array(
-            'enabled_payments' => $enable_payments,
-            'transaction_details' => $transaction_details,
-            'customer_details' => $customer_details,
-            'item_details' => $item_details,
-        );
-        // return $transaction;
-        try {
-            $snapToken = Snap::getSnapToken($transaction);
-
-            // return response()->json($snapToken);
-            return response()->json([
-                "message" => "Transaction updated successfully",
-                "status" => true,
-                "results" => $snapToken,
-                "data" => [
-                    "attributes" => $data
-                ]
-            ]);
-        } catch (\Exception $e) {
-            dd($e);
-            // return ['code' => 0 , 'message' => 'failed'];
-            return response()->json([
-                "message" => "failed",
-                "status" => false,
-                // "results" => $snapToken,
-                // "data" => [
-                //     "attributes" => $data
-                // ]
-            ]);
-        }
-
+        return response()->json([
+            "message" => "Transaction updated successfully"
+        ]);
     }
 
     public function delete($id)
@@ -360,6 +288,25 @@ class PaymentController extends Controller
 
     public function midtransPush(Request $request)
     {
-        
+        $req = $request->all();
+        $pay = Payments::where('order_id', $req['order_id'])->get();
+        // return $pay;
+        $pays = Payments::find($pay[0]->id);
+        if(!$pay)
+        {
+            return response()->json([
+                "message" => "Id order not found",
+                "status" => false
+            ]);
+        }
+        $pays->transaction_time = $req['transaction_time'];
+        $pays->transaction_status = $req['transaction_status'];
+        $pays->transaction_id = $req['transaction_id'];
+        if($pays->save())
+        {
+            return response()->json([
+                "message" => "Transaction changes"
+            ], 200);
+        }
     }
 }
