@@ -128,7 +128,7 @@ class PaymentController extends Controller
         $data->gross_amount = $request->input('data.attributes.gross_amount');
         // $data->bank = $request->input('data.attributes.bank');
         $data->order_id = $request->input('data.attributes.order_id');
-        $data->transaction_id = "";
+        $data->transaction_id = 0;
         $data->transaction_time = "";
         $data->transaction_status = "created";
         $data->save();
