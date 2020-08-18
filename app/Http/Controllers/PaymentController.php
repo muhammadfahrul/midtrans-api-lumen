@@ -288,7 +288,7 @@ class PaymentController extends Controller
 
     public function midtransPush(Request $request)
     {
-        $req = $request->all();
+        // $req = $request->all();
         $pay = Payment::where('order_id', $request->order_id)->get();
         // return $pay;
         $pays = Payment::find($pay[0]->id);
@@ -299,9 +299,9 @@ class PaymentController extends Controller
                 "status" => false
             ]);
         }
-        $pays->transaction_time = $req['transaction_time'];
-        $pays->transaction_status = $req['transaction_status'];
-        $pays->transaction_id = $req['transaction_id'];
+        $pays->transaction_time = $request->input('transaction_time');
+        $pays->transaction_status = $request->input('transaction_status');
+        $pays->transaction_id = $request->input('transaction_id');
         if($pays->save())
         {
             return response()->json([
