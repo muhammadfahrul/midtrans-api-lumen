@@ -288,14 +288,14 @@ class PaymentController extends Controller
 
     public function midtransPush(Request $request)
     {
-        $req = $request->all();
-        $pay = Payment::where('order_id', $req['order_id'])->get();
+        // $req = $request->all();
+        $pay = Payment::where('order_id', $request->order_id)->get();
         // return $pay;
         $pays = Payment::find($pay[0]->id);
         if(!$pay)
         {
             return response()->json([
-                "message" => "Id order not found",
+                "message" => "Order id not found",
                 "status" => false
             ]);
         }
