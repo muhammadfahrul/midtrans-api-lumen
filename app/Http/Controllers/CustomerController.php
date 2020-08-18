@@ -57,17 +57,17 @@ class CustomerController extends Controller
     public function add(Request $request)
     {
         $this->validate($request, [
-            'full_name' => 'required',
-            'username' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required',
+            'data.attributes.full_name' => 'required',
+            'data.attributes.username' => 'required',
+            'data.attributes.email' => 'required|email',
+            'data.attributes.phone_number' => 'required',
         ]);
         
         $data = new Customer();
-        $data->full_name = $request->input('full_name');
-        $data->username = $request->input('username');
-        $data->email = $request->input('email');
-        $data->phone_number = $request->input('phone_number');
+        $data->full_name = $request->input('data.attributes.full_name');
+        $data->username = $request->input('data.attributes.username');
+        $data->email = $request->input('data.attributes.email');
+        $data->phone_number = $request->input('data.attributes.phone_number');
         $data->save();
 
         Log::info('Adding customer');
@@ -84,18 +84,18 @@ class CustomerController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'full_name' => 'required',
-            'username' => 'required',
-            'email' => 'required|email',
-            'phone_number' => 'required',
+            'data.attributes.full_name' => 'required',
+            'data.attributes.username' => 'required',
+            'data.attributes.email' => 'required|email',
+            'data.attributes.phone_number' => 'required',
         ]);
         
         $data = Customer::find($id);
         if ($data) {
-            $data->full_name = $request->input('full_name');
-            $data->username = $request->input('username');
-            $data->email = $request->input('email');
-            $data->phone_number = $request->input('phone_number');
+            $data->full_name = $request->input('data.attributes.full_name');
+            $data->username = $request->input('data.attributes.username');
+            $data->email = $request->input('data.attributes.email');
+            $data->phone_number = $request->input('data.attributes.phone_number');
             $data->save();
 
             Log::info('Updating customer by id');
